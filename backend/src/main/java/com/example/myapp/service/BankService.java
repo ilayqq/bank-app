@@ -33,6 +33,10 @@ public class BankService {
         return customerRepository.findByPhoneNumber(phoneNumber);
     }
 
+    public List<Customer> searchCustomers(String query) {
+        return customerRepository.findCustomersByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseOrPhoneNumberContainsIgnoreCaseOrEmailContainsIgnoreCase(query, query, query, query);
+    }
+
     public Account createAccount(Long customerId) {
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
