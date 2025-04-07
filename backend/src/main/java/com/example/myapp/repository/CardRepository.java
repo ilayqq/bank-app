@@ -1,11 +1,13 @@
 package com.example.myapp.repository;
+
 import com.example.myapp.model.Account;
+import com.example.myapp.model.Card;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Optional;
 
 @Repository
-public interface AccountRepository extends JpaRepository<Account, Long> {
-    List<Account> findAllByCustomer_PhoneNumber(String customerPhoneNumber);
+public interface CardRepository extends JpaRepository<Card, Long> {
+    Optional<Card> findByAccount(Account account);
 }

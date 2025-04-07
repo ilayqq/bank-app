@@ -9,10 +9,8 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -25,50 +23,6 @@ import java.util.List;
 public class BankController {
 
     private final BankService bankService;
-
-    @Operation(summary = "Создать клиента")
-    @PostMapping("/customer")
-    public Customer createCustomer(@RequestBody Customer customer) {
-        return bankService.createCustomer(customer);
-    }
-
-    @Operation(summary = "Получить список клиентов")
-    @GetMapping("/customer")
-    public List<Customer> getCustomers() {
-        return bankService.getCustomers();
-    }
-    
-    @Operation(summary = "Получить клиента по номеру телефона")
-    @GetMapping("/customer/{phoneNumber}")
-    public List<Customer> getCustomer(@PathVariable String phoneNumber) {
-        return bankService.getCustomer(phoneNumber);
-    }
-
-    @Operation(summary = "Поиск")
-    @GetMapping("/customer/search")
-    public ResponseEntity<List<Customer>> searchCustomers(
-            @RequestParam("query")
-            @Size(min = 2, message = "Минимальная длина запроса — 2 символа")
-            String query) {
-        List<Customer> result = bankService.searchCustomers(query);
-        return ResponseEntity.ok(result);
-    }
-
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<String> handleConstraintViolation(ConstraintViolationException ex) {
-        String errorMessage = ex.getConstraintViolations()
-                .stream()
-                .map(ConstraintViolation::getMessage)
-                .findFirst()
-                .orElse("Неверный ввод");
-        return ResponseEntity.badRequest().body(errorMessage);
-    }
-
-    @Operation(summary = "Создать банковский счет")
-    @PostMapping("/account/{customerId}")
-    public Account createAccount(@PathVariable Long customerId) {
-        return bankService.createAccount(customerId);
-    }
 
     @Operation(summary = "Пополнение баланса")
     @PostMapping("/deposit/{accountId}")

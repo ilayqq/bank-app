@@ -17,32 +17,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BankService {
 
-    private final CustomerRepository customerRepository;
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
-
-    public Customer createCustomer(Customer customer) {
-        return customerRepository.save(customer);
-    }
-
-    public List<Customer> getCustomers() {
-        return customerRepository.findAll();
-    }
-
-    public List<Customer> getCustomer(String phoneNumber) {
-        return customerRepository.findByPhoneNumber(phoneNumber);
-    }
-
-    public List<Customer> searchCustomers(String query) {
-        return customerRepository.findCustomersByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseOrPhoneNumberContainsIgnoreCaseOrEmailContainsIgnoreCase(query, query, query, query);
-    }
-
-    public Account createAccount(Long customerId) {
-        Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new RuntimeException("Customer not found"));
-        Account account = new Account(null, customer, BigDecimal.ZERO);
-        return accountRepository.save(account);
-    }
 
     @Transactional
     public Account deposit(Long accountId, BigDecimal amount) {

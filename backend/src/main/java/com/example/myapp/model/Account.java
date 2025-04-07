@@ -1,4 +1,5 @@
 package com.example.myapp.model;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -6,8 +7,7 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "accounts")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Account {
@@ -15,9 +15,13 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", nullable = false)
+    @JsonBackReference
     private Customer customer;
+
+    @Enumerated(EnumType.STRING)
+    private AccountType type;
 
     private BigDecimal balance;
 }
