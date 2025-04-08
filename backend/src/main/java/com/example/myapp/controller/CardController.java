@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/cards")
 @RequiredArgsConstructor
@@ -18,14 +20,9 @@ public class CardController {
     private final CardRepository cardRepository;
     private final AccountRepository accountRepository;
 
-    @GetMapping("/{accountId}")
-    public ResponseEntity<Card> getCardByAccountId(@PathVariable Long accountId) {
-        Account account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new RuntimeException("Account not found"));
-
-        Card card = cardRepository.findByAccount(account)
-                .orElseThrow(() -> new RuntimeException("Card not found"));
-
-        return ResponseEntity.ok(card);
+    @GetMapping("/{phoneNumber}")
+    public ResponseEntity<List<Card>> getCardsByAccountId(@PathVariable String phoneNumber) {
+        List<Card> cards = cardRepository.findAllByAccount_Customer_PhoneNumber(phoneNumber);
+        return ResponseEntity.ok(cards);
     }
 }

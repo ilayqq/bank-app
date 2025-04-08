@@ -4,7 +4,6 @@ import com.example.myapp.model.Account;
 import com.example.myapp.model.AccountType;
 import com.example.myapp.repository.AccountRepository;
 import com.example.myapp.service.AccountService;
-import com.example.myapp.service.BankService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
