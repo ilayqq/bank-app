@@ -1,25 +1,57 @@
 package com.example.myapp.config;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
+import java.security.Key;
 import java.util.Date;
 
 @Component
 public class JwtUtil {
-    private final String SECRET_KEY = "secretKey";
+    private final String SECRET_KEY = "superSecretKeyThatIsAtLeast32Chars!";
     private final long EXPIRATION_TIME = 86400000;
 
-    private String generateToken(String phoneNumber, Long customerId) {
+    private Key getSigningKey() {
+        return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+    }
+
+    public String generateToken(String phoneNumber, Long customerId) {
         return Jwts.builder()
                 .claim("customerId", customerId)
                 .claim("phoneNumber", phoneNumber)
                 .setSubject(String.valueOf(customerId))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token);
+            return true;
+        } catch (JwtException e) {
+            return false;
+        }
+    }
+
+    public Claims extractAllClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    public Long extractCustomerId(String token) {
+        return extractAllClaims(token).get("customerId", Long.class);
+    }
+
+    public String extractPhoneNumber(String token) {
+        return extractAllClaims(token).get("phoneNumber", String.class);
     }
 }
