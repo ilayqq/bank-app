@@ -1,0 +1,111 @@
+/* Основной фон */
+.login-wrapper {
+    background-color: #0e1629;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+  }
+  
+  /* Карточка формы */
+  .login-card {
+    background-color: #11182f;
+    padding: 48px 32px;
+    border-radius: 24px;
+    width: 100%;
+    max-width: 360px;
+    text-align: center;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  }
+  
+  /* Лого */
+  .login-logo {
+    font-size: 36px;
+    font-weight: bold;
+    color: #3cd5af;
+    margin-bottom: 4px;
+  }
+  
+  /* Название бренда */
+  .login-brand {
+    color: white;
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+  }
+  
+  .login-welcome {
+    color: white;
+    font-size: 26px;
+    margin-bottom: 32px;
+    font-weight: 700;
+  }
+  
+  /* Поля ввода */
+  .login-input {
+    background-color: transparent;
+    border-radius: 8px;
+    border: 1px solid #2e3348 !important;
+    color: white;
+  }
+  
+  .login-input:focus {
+    color: black !important;
+  }
+
+  .login-input input {
+    background: transparent;
+  }
+  
+  /* Кнопка */
+  .login-button {
+    background-color: #2e3348;
+    color: white;
+    height: 40px;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+  }
+  
+  /* .login-button:hover {
+    background-color: #40465c;
+  } */
+  
+  /* Ссылка "забыли пароль?" */
+  .login-forgot {
+    display: block;
+    margin-top: 12px;
+    font-size: 14px;
+    color: #ccc;
+  }
+  
+  /* 📱 Адаптация под мобильные */
+  @media screen and (max-width: 480px) {
+    .login-card {
+      padding: 32px 20px;
+      border-radius: 20px;
+    }
+  
+    .login-welcome {
+      font-size: 22px;
+    }
+  
+    .login-brand {
+      font-size: 18px;
+    }
+  
+    .login-logo {
+      font-size: 32px;
+    }
+  
+    .login-button {
+      height: 38px;
+      font-size: 14px;
+    }
+  
+    .login-input {
+      font-size: 14px;
+    }
+  }
+  
