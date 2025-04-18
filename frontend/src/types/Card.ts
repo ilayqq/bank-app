@@ -5,4 +5,9 @@ export interface CardData {
     expiry: string;
     type: "DEBIT" | "CREDIT";
     bankName: string;
+    account: {
+        id: number;
+        type: string;
+        balance: number;
+    }
 }

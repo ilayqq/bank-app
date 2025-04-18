@@ -17,6 +17,7 @@ public class Account {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", nullable = false)
+    @ToString.Exclude
     @JsonBackReference
     private Customer customer;
 

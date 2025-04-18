@@ -9,7 +9,7 @@ const LoginPage = () => {
   const onFinish = async (values: any) => {
     try {
       const res = await login(values);
-      localStorage.setItem("token", res.token);
+      localStorage.setItem("token", res);
       navigate("/dashboard");
     } catch {
       alert("Wrong credentials");
@@ -24,7 +24,7 @@ const LoginPage = () => {
         <h2 className="login-welcome">Welcome Back</h2>
 
         <Form layout="vertical" onFinish={onFinish} className="login-form">
-          <Form.Item label="Username" name="username" rules={[{ required: true }]}>
+          <Form.Item label="Phone Number" name="phoneNumber" rules={[{ required: true }]}>
             <Input className="login-input" />
           </Form.Item>
           <Form.Item label="Password" name="password" rules={[{ required: true }]}>

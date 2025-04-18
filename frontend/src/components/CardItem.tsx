@@ -8,7 +8,7 @@ const CardItem = ({ card }: { card: CardData }) => {
             <div className="card-number">{card.cardNumber}</div>
             <div className="card-footer">
                 <span className="card-holder">{card.holderName}</span>
-                <span className="card-expiry">{card.expiry}</span>
+                <span className="card-expiry">{card.account.balance.toFixed(2)}</span>
             </div>
         </div>
     );
