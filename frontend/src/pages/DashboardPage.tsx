@@ -21,9 +21,11 @@ const DashboardPage = () => {
                     <h2>Cards</h2>
                     <button className="add-card-button">+ Add New Card</button>
                 </div>
-                {cards.map((card) => (
-                    <CardItem key={card.id} card={card} />
-                ))}
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
+                    {cards.map((card) => (
+                        <CardItem key={card.id} card={card} />
+                    ))}
+                </div>
             </div>
         </div>
     );

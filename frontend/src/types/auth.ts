@@ -3,6 +3,4 @@ export interface LoginRequest {
     password: string;
 }
 
-export interface LoginResponse {
-    token: string;
-}
+export type LoginResponse = string;
