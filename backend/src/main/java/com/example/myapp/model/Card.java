@@ -17,6 +17,10 @@ public class Card {
 
     private String cardNumber;
 
+    private String expiryDate;
+
+    private String cvv;
+
     @OneToOne
     @JoinColumn(name = "account_id")
     private Account account;

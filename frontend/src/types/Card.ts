@@ -2,9 +2,7 @@ export interface CardData {
     id: number;
     cardNumber: string;
     holderName: string;
-    expiry: string;
-    type: "DEBIT" | "CREDIT";
-    bankName: string;
+    expiryDate: string;
     account: {
         id: number;
         type: string;

@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class CustomRateLimiterService {
     private final Map<String, RequestInfo> requestCounts = new ConcurrentHashMap<>();
-    private final int LIMIT = 5;
+    private final int LIMIT = 100;
     private final long TIME_WINDOW = 60 * 1000;
 
     public boolean isRequestAllowed(String clientId) {
