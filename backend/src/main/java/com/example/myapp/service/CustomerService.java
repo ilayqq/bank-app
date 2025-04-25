@@ -3,6 +3,7 @@ package com.example.myapp.service;
 import com.example.myapp.model.Customer;
 import com.example.myapp.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class CustomerService {
         return customerRepository.findAll();
     }
 
+    @Cacheable(value = "customers", key = "#a0")
     public List<Customer> getCustomer(String phoneNumber) {
         return customerRepository.findByPhoneNumber(phoneNumber);
     }

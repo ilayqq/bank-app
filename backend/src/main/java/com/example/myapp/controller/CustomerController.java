@@ -39,7 +39,8 @@ public class CustomerController {
 //        return customerService.getCustomer(phoneNumber);
 //    }
     public ResponseEntity<List<Customer>> getCustomer(@PathVariable String phoneNumber) {
-        List<Customer> customer = customerRepository.findByPhoneNumber(phoneNumber);
+//        List<Customer> customer = customerRepository.findByPhoneNumber(phoneNumber);
+        List<Customer> customer = customerService.getCustomer(phoneNumber);
 //                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Клиент не найден"));
 
         return ResponseEntity.ok(customer);
