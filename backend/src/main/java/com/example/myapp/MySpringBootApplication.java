@@ -27,13 +27,13 @@ import org.springframework.cache.annotation.EnableCaching;
 @EnableCaching
 public class MySpringBootApplication {
     public static void main(String[] args) {
-//        Dotenv dotenv = Dotenv.configure()
-//                .directory("./backend")
-//                .load();
-//
-//        dotenv.entries().forEach(entry ->
-//                System.setProperty(entry.getKey(), entry.getValue())
-//        );
+        Dotenv dotenv = Dotenv.configure()
+                .directory("./backend")
+                .load();
+
+        dotenv.entries().forEach(entry ->
+                System.setProperty(entry.getKey(), entry.getValue())
+        );
 
         SpringApplication.run(MySpringBootApplication.class, args);
     }
