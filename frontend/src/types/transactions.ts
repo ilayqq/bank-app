@@ -1,10 +1,9 @@
-export interface TopUpRequest {
-    cardId: number;
-    amount: number;
-}
-
-export interface TransferRequest {
-    fromCardId: number;
-    toCardNumber: string;
-    amount: number;
+export interface Transaction {
+    key: string;
+    description: string;
+    transactionId: string;
+    type: string;
+    card: string;
+    date: string;
+    amount: string;
 }

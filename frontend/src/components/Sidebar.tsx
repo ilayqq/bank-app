@@ -1,65 +1,61 @@
-import { Drawer, Menu, Grid } from 'antd';
-import {
-  HomeOutlined,
-  CreditCardOutlined,
-  UserOutlined,
-  SettingOutlined,
-  SwapOutlined,
-  MenuOutlined,
-} from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import '../styles/Sidebar.css';
-
-const { useBreakpoint } = Grid;
+import { Menu, MenuProps } from 'antd';
+import { CreditCardOutlined, HomeFilled, SwapOutlined, TransactionOutlined } from '@ant-design/icons';
+import { useLocation, useNavigate } from 'react-router-dom';
+import Sider from 'antd/es/layout/Sider';
+import Logo from "../assets/img/logo.png";
+import { useEffect, useState } from 'react';
 
 const Sidebar = () => {
   const navigate = useNavigate();
-  const screens = useBreakpoint();
-  const [visible, setVisible] = useState(false);
+  const location = useLocation();
+  const [defaultOpenKey, setDefaultOpenKey] = useState<string[]>([]);
 
-  const menuItems = [
-    { key: '/dashboard', icon: <HomeOutlined />, label: 'Dashboard' },
-    { key: '/accounts', icon: <UserOutlined />, label: 'Accounts' },
-    { key: '/cards', icon: <CreditCardOutlined />, label: 'Cards' },
-    { key: '/transactions', icon: <SwapOutlined />, label: 'Transactions' },
-    { key: '/settings', icon: <SettingOutlined />, label: 'Settings' },
-  ];
+  type MenuItem = Required<MenuProps>['items'][number];
+
+  const items: MenuItem[] = [
+    { key: '/dashboard', icon: <HomeFilled />, label: 'Dashboard' },
+    { key: "/cards", icon: <CreditCardOutlined />, label: "Cards" },
+    { key: "/transactions", icon: <TransactionOutlined />, label: "Transactions" },
+    {
+      key: "/transfers",
+      label: "Transfers",
+      icon: <SwapOutlined />,
+      children: [
+        { key: "/transfers/phoneNumber", label: "With Phone Number" },
+        { key: "/transfers/replenish", label: "Replenish" },
+        { key: "/transfers/transfer", label: "Transfer" }
+      ],
+    },
+  ]
+
+  useEffect(() => {
+    if (location.pathname.startsWith("/transfers")) {
+      setDefaultOpenKey(["/transfers"]);
+    } else {
+      setDefaultOpenKey([""]);
+    }
+  }, [location.pathname]);
 
   const onClick = (e: any) => {
     navigate(e.key);
-    setVisible(false);
   };
 
-  if (!screens.md) {
-    // Mobile version — show burger icon
-    return (
-      <div className="mobile-menu-icon">
-        <MenuOutlined onClick={() => setVisible(true)} />
-        <Drawer
-          title="Menu"
-          placement="left"
-          onClose={() => setVisible(false)}
-          open={visible}
-        >
-          <Menu mode="vertical" onClick={onClick} items={menuItems} />
-        </Drawer>
-      </div>
-    );
-  }
-
-  // Desktop version
   return (
-    <div className="sidebar">
+    <Sider breakpoint="lg" collapsedWidth="0">
+      <div className="logo" style={{ margin: '16px', color: 'white', fontWeight: 'bold', fontSize: 25, display: "flex", alignItems: "center", gap: 10 }}>
+        <img src={Logo} alt="logo" />
+        BankDash.
+      </div>
       <Menu
         theme="dark"
-        mode="vertical"
-        defaultSelectedKeys={['/dashboard']}
-        className="sidebar-menu"
+        mode="inline"
+        openKeys={defaultOpenKey}
+        selectedKeys={[location.pathname]}
         onClick={onClick}
-        items={menuItems}
+        items={items}
+        onOpenChange={(keys) => setDefaultOpenKey(keys)}
       />
-    </div>
+    </Sider>
   );
 };
 

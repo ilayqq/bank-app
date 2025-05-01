@@ -1,43 +1,18 @@
-import { useEffect, useState } from "react";
-import Sidebar from "../components/Sidebar"
-import { CardData } from "../types/Card";
-import { CustomerData } from "../types/Customer";
-import { getCards } from "../api/cards";
-import { parseJwt } from "../api/auth";
-import { getCustomer } from "../api/customer";
-import CardItem from "../components/CardItem";
+import { Layout } from "antd";
+import Sidebar from "../components/Sidebar";
+import HeaderItem from "../components/Header";
+import { Content } from "antd/es/layout/layout";
 
-export const CardsPage = () => {
-    const [cards, setCards] = useState<CardData[]>([]);
-    const [customer, setCustomer] = useState<CustomerData | null>(null);
-
-    useEffect(() => {
-        getCards().then(setCards);
-
-        const token = localStorage.getItem("token");
-        if (token) {
-            const payload = parseJwt(token);
-            const phoneNumber = payload?.phoneNumber;
-            getCustomer(phoneNumber).then((data) => {
-                setCustomer(data[0]);
-            });
-        }
-    }
-        , []);
-
+const CardsPage: React.FC = () => {
     return (
-        <div className="dashboard-wrapper">
+        <Layout style={{ minHeight: '100vh' }}>
             <Sidebar />
-            <div className="dashboard-content">
-                <div className="dashboard-header">
-                    <h2>Cards</h2>
-                </div>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
-                    {customer && cards.map((card) => (
-                        <CardItem key={card.id} card={card} customer={customer} />
-                    ))}
-                </div>
-            </div>
-        </div>
+            <Layout>
+                <HeaderItem />
+                <Content style={{ alignSelf: "center" }}>
+                </Content>
+            </Layout>
+        </Layout>
     )
 }
+export default CardsPage;

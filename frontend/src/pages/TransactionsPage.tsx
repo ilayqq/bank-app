@@ -1,64 +1,115 @@
-import { Button, Card, Form, Input, InputNumber, message, Tabs } from "antd";
-import { topUp, transfer } from "../api/transactions";
+import { Layout, message, Table, Tabs } from "antd";
+import { useEffect, useState } from "react";
+import { Transaction } from "../types/transactions";
+import TabPane from "antd/es/tabs/TabPane";
+import Sidebar from "../components/Sidebar";
+import HeaderItem from "../components/Header";
+import { Content } from "antd/es/layout/layout";
+import { getTransactions } from "../api/transactions";
+
+const columns = [
+    {
+        title: 'Description',
+        dataIndex: 'description',
+        key: 'description',
+    },
+    {
+        title: 'Transaction ID',
+        dataIndex: 'transactionId',
+        key: 'transactionId',
+    },
+    {
+        title: 'Type',
+        dataIndex: 'type',
+        key: 'type',
+    },
+    {
+        title: 'Card',
+        dataIndex: 'card',
+        key: 'card',
+    },
+    {
+        title: 'Date',
+        dataIndex: 'date',
+        key: 'date',
+    },
+    {
+        title: 'Amount',
+        dataIndex: 'amount',
+        key: 'amount',
+        render: (text: string | number) => {
+            const amount = typeof text === 'string' ? parseFloat(text) : text;
+            return <span style={{ color: amount < 0 ? 'red' : 'green' }}>{amount < 0 ? `-$${Math.abs(amount)}` : `+$${amount}`}</span>;
+        },
+    },
+];
 
 export const TransactionsPage = () => {
-    const [topUpForm] = Form.useForm();
-    const [transferForm] = Form.useForm();
+    const [transactions, setTransactions] = useState<Transaction[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
 
-    const onTopUp = async (values: any) => {
-        await topUp({ cardId: 1, amount: values.amount });
-        message.success("Karta popolnena");
-        topUpForm.resetFields();
-    }
+    useEffect(() => {
+        const fetchTransactions = async () => {
+            setLoading(true);
+            try {
+                const data = await getTransactions(); // Получаем данные с сервера
+                // Преобразуем данные в формат, который подходит для таблицы
+                const transformedData = data.map((item, index) => ({
+                    key: index.toString(),
+                    description: item.description,
+                    transactionId: item.transactionId,
+                    type: item.type,
+                    card: item.card,
+                    date: item.date,
+                    amount: item.amount,
+                }));
+                setTransactions(transformedData);
+            } catch (error) {
+                message.error('Error fetching transactions');
+            } finally {
+                setLoading(false);
+            }
+        };
 
-    const onTransfer = async (values: any) => {
-        await transfer({
-            fromCardId: 1,
-            toCardNumber: values.toCardNumber,
-            amount: values.amount,
-        });
-        message.success("Perevod vypolnen");
-        transferForm.resetFields();
-    }
+        fetchTransactions(); // Загружаем транзакции при монтировании компонента
+    }, []);
 
     return (
-        <div>
-            <h2>Transactions</h2>
-            <Card>
-                <Tabs defaultActiveKey="topup" items={[
-                    {
-                        key: "topup",
-                        label: "Top up",
-                        children: (
-                            <Form form={topUpForm} layout="vertical" onFinish={onTopUp}>
-                                <Form.Item name="amount" label="Amount" rules={[{ required: true }]}>
-                                    <InputNumber min={1} style={{ width: "100%" }} />
-                                </Form.Item>
-                                <Form.Item>
-                                    <Button type="primary" htmlType="submit">Top Up</Button>
-                                </Form.Item>
-                            </Form>
-                        ),
-                    },
-                    {
-                        key: "transfer",
-                        label: "Transfer",
-                        children: (
-                            <Form form={transferForm} layout="vertical" onFinish={onTransfer}>
-                                <Form.Item name="toCardNumber" label="To Card Number" rules={[{ required: true }]}>
-                                    <Input placeholder="XXXX XXXX XXXX XXXX" />
-                                </Form.Item>
-                                <Form.Item name="amount" label="Amount" rules={[{ required: true }]}>
-                                    <InputNumber min={1} style={{ width: "100%" }} />
-                                </Form.Item>
-                                <Form.Item>
-                                    <Button type="primary" htmlType="submit">Transfer</Button>
-                                </Form.Item>
-                            </Form>
-                        ),
-                    },
-                ]} />
-            </Card>
-        </div>
+        <Layout style={{ minHeight: '100vh' }}>
+            <Sidebar />
+            <Layout>
+                <HeaderItem />
+                <Content>
+                    <div>
+                        <Tabs defaultActiveKey="1">
+                            <TabPane tab="All Transactions" key="1">
+                                <Table
+                                    columns={columns}
+                                    dataSource={transactions}
+                                    loading={loading}
+                                    pagination={false}
+                                />
+                            </TabPane>
+                            <TabPane tab="Income" key="2">
+                                <Table
+                                    columns={columns}
+                                    dataSource={transactions.filter(item => !item.amount.includes('-'))}
+                                    loading={loading}
+                                    pagination={false}
+                                />
+                            </TabPane>
+                            <TabPane tab="Expense" key="3">
+                                <Table
+                                    columns={columns}
+                                    dataSource={transactions.filter(item => item.amount.includes('-'))}
+                                    loading={loading}
+                                    pagination={false}
+                                />
+                            </TabPane>
+                        </Tabs>
+                    </div>
+                </Content>
+            </Layout>
+        </Layout>
     );
 };

@@ -1,13 +1,19 @@
-import { TopUpRequest, TransferRequest } from "../types/transactions";
+import axios from "axios";
+import { Transaction } from "../types/transactions";
+import { API_URL } from "./auth";
 
-export const topUp = async (data: TopUpRequest): Promise<void> => {
-    return new Promise((resolve) => {
-        setTimeout(resolve, 1000);
-    });
-};
+export const getTransactions = async (): Promise<Transaction[]> => {
+    try {
+        const response = await axios.get<Transaction[]>(API_URL + "/transactions", {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+        });
 
-export const transfer = async (data: TransferRequest): Promise<void> => {
-    return new Promise((resolve) => {
-        setTimeout(resolve, 1000);
-    });
-};
+        return response.data;
+    } catch (error) {
+        console.error("Ошибка при получении транзакций:", error);
+        throw error;
+    }
+}
